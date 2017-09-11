@@ -15,6 +15,16 @@
 		<script src="js/mui.min.js"></script>
 		<script type="text/javascript">
 			mui.init()
+			function plusReady(){
+			    //拿到index界面,这里index是启动页,所以用getLaunchWebview方法
+			    var indexWV = plus.webview.getLaunchWebview();
+			    mui.fire(indexWV,'homeReady');
+			}
+			if (window.plus) {
+			    plusReady()
+			} else{
+			    document.addEventListener('plusready',plusReady,false);
+			}
 		</script>
 	</body>
 

@@ -12,7 +12,7 @@
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-		    <h1 class="mui-title">标题</h1>
+			<h1 class="mui-title">标题</h1>
 		</header>
 		<nav class="mui-bar mui-bar-tab" id="tabBar">
 			<a class="mui-tab-item mui-active" id="home.html">
@@ -33,32 +33,53 @@
 			</a>
 		</nav>
 		<script type="text/javascript" charset="utf-8">
-			mui.init({subpages:[{
-					url: 'home.html',
-					id: 'home.html',
-					styles: {top: '44px',bottom: '44px'}
-				},
-				{
-					url: 'phone.html',
-					id: 'phone.html',
-					styles: {top: '44px',bottom: '44px'}
-				},
-				{
-					url: 'email.html',
-					id: 'email.html',
-					styles: {top: '44px',bottom: '44px'}
-				},
-				{
-					url: 'setting.html',
-					id: 'setting.html',
-					styles: {top: '44px',bottom: '44px'}
-				}
-			]});
+			mui.init({
+				subpages: [{
+						url: 'home.html',
+						id: 'home.html',
+						styles: {
+							top: '44px',
+							bottom: '50px'
+						}
+					},
+					{
+						url: 'phone.html',
+						id: 'phone.html',
+						styles: {
+							top: '44px',
+							bottom: '50px'
+						}
+					},
+					{
+						url: 'email.html',
+						id: 'email.html',
+						styles: {
+							top: '44px',
+							bottom: '50px'
+						}
+					},
+					{
+						url: 'setting.html',
+						id: 'setting.html',
+						styles: {
+							top: '44px',
+							bottom: '50px'
+						}
+					}
+				]
+			});
 
-			mui.plusReady(function(){
-				var view = plus.webview.getWebviewById('home.html');
-				view.show();
-			})
+			function plusReady(){
+				window.addEventListener('homeReady', function() {
+					var view = plus.webview.getWebviewById('home.html');
+					view.show();
+				});
+			}
+			if (window.plus) {
+			    plusReady()
+			} else{
+			    document.addEventListener('plusready',plusReady,false);
+			}
 
 			mui("#tabBar").on('tap', 'a', function(e) {
 				var id = this.getAttribute('id');
