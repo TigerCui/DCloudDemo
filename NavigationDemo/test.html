@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.layout {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content layout">
+		    test
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			
+			mui.plusReady(function() {
+				setTimeout(getNavi,5000);
+				var info = plus.runtime.innerVersion;
+				console.log(info);
+			});
+			
+			function getNavi() {
+				var _self = plus.webview.currentWebview();
+				var navigation = _self.getNavigationbar();
+				console.log(JSON.stringify('navigation:' + navigation));
+				navigation = _self.getTitleNView();
+				console.log(JSON.stringify('navigation:' + navigation));
+			}
+			
+			
+		</script>
+	</body>
+
+</html>
