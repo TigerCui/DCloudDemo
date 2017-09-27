@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+		</script>
+	</head>
+
+	<body>
+		<script type="text/javascript">
+			var target = {
+				company: "dcloud",
+				product: {
+					mui: "小巧、高效"
+				}
+			}
+			var obj1 = {
+				city: "beijing",
+				product: {
+					HBuilder: "飞一样的编码"
+				}
+			}
+			mui.extend(true,target,obj1);
+			console.log(JSON.stringify(target));
+			
+			mui.extend()
+			
+		</script>
+	</body>
+
+</html>
