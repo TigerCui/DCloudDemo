@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/h.js"></script>
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/yd.css" />
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div class="mui-slider">
+				<div class="mui-slider-group mui-slider-loop" id="img-slider"></div>
+				<div class="mui-slider-indicator" id="point"></div>
+			</div>
+			<div class="newsList">
+				<ul id="newsListUl"></ul>
+			</div>
+		</div>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			var _index, _self, _next; //定义三个变量 index页 当前页 下一页
+			mui.plusReady(function() {
+				//获取轮播内容
+				mui.get(
+					'http://hoa.hcoder.net/index.php?user=hcoder&pwd=hcoder&m=lunbo', //请求url
+					function(res) { //请求回调
+						var items = res.split('--hcSplitor--'); //根据分隔符将数据拆分为数组
+						var html = '<div class="mui-slider-item"><a href="#">' + items[items.length - 1] + '</a></div>';
+						var points = ''; //指示圆点
+						for(var i = 0; i < items.length; i++) { //循环构造轮播项mui-slider-item和指示圆点
+							html += '<div class="mui-slider-item"><a href="#">' + items[i] + '</a></div>';
+							points += '<div class="mui-indicator"></div>'; //
+						}
+						html += '<div class="mui-slider-item"><a href="#">' + items[0] + '</a></div>';
+						h('#img-slider').html(html); //将轮播项写入dom中
+						h('#point').html(points); //将指示圆点写入dom中
+						//获取轮播组件 并启动循环
+						var gallery = mui('.mui-slider');
+						gallery.slider({
+							interval: 1000 //自动轮播周期,若为0则不自动播放
+						});
+					}
+				)
+
+				//新闻列表
+				mui.get(
+					'http://hoa.hcoder.net/index.php?user=hcoder&pwd=hcoder&m=mediaList&page=1',
+					function(res) {
+						var newsList = res.split('--hcSplitor--');
+						var html = '';
+						for(var i = 0; i < newsList.length; i++) {
+							var newsItem = newsList[i].split('--hcListSplitor--');
+							html += '<li id="'+ i +'"><div class="imgs"><img src="' + newsItem[1] + '" /></div><div class="title">' + newsItem[2] + '</div></li>'
+						}
+						h('#newsListUl').html(html);
+						console.log(JSON.stringify(res));
+					}
+				);
+
+				_index = plus.webview.getLaunchWebview();
+				_self = plus.webview.currentWebview();
+				_next = plus.webview.getWebviewById('dict.html');
+				//配置滑动操作
+				_self.drag({
+					direction: 'left', //滑动方向
+					moveMode: 'followFinger', //滑动方式
+				}, {
+					view: _next, //影响其他view
+					moveMode: 'follow' //其他view的滑动方式
+				}, function(e) {
+					//滑动过程中的回调函数
+					if(e.type == 'end' && e.result) {
+						//修改tabBar按钮的选中效果,现将tabBar上所有a标签的mui.active类去掉,然后再在dict的a标签上添加mui-active
+						_index.evalJS("h('#tabBar').find('a').removeClass('mui.active');h('#dict').addClass('mui-active');");
+					}
+				});
+				
+				//给列表绑定点击事件
+				mui('#newsListUl').on('tap','li',function(e) {
+					var index = parseInt(this.getAttribute("id"));
+					console.log(''+index);
+				});
+				
+				//点击列表项时的响应
+				function tapListItem(e) {
+					var index = parseInt(this.getAttribute("id"));
+					console.log(''+index);
+				}
+			});
+		</script>
+	</body>
+
+</html>

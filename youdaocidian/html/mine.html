@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/h.js"></script>
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/yd.css" />
+	</head>
+
+	<body>
+		mine
+		<script type="text/javascript" charset="utf-8">
+			_index = plus.webview.getLaunchWebview();
+			_self = plus.webview.currentWebview();
+			_prve = plus.webview.getWebviewById('hot.html');
+			mui.init();
+			//向右滑
+			_self.drag({
+				direction: 'right', //滑动方向
+				moveMode: 'followFinger', //滑动方式
+			}, {
+				view: _prve, //影响其他view
+				moveMode: 'follow' //其他view的滑动方式
+			}, function(e) {
+				//滑动过程中的回调韩式
+				if(e.type == 'end' && e.result) {
+					//修改tabBar按钮的选中效果,现将tabBar上所有a标签的mui.active类去掉,然后再在dict的a标签上添加mui-active
+					_index.evalJS("h('#tabBar').find('a').removeClass('mui.active');h('#hot').addClass('mui-active');");
+				}
+			});
+		</script>
+	</body>
+
+</html>
