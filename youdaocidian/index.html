@@ -1,16 +1,121 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-    <title></title>
-    <script src="js/mui.min.js"></script>
-    <link href="css/mui.min.css" rel="stylesheet"/>
-    <script type="text/javascript" charset="utf-8">
-      	mui.init();
-    </script>
-</head>
-<body>
-	
-</body>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<script src="js/h.js"></script>
+		<link href="css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/yd.css"/>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav hBg">
+		    <div id="logo">
+		    		<img src="imgs/logo.png"/>
+		    </div>
+		    <div id="searchBtn">
+		    	请输入要翻译的文本
+		    </div>
+		</header>
+		<nav class="mui-bar mui-bar-tab" id="tabBar">
+		    <a class="mui-tab-item mui-active" id="home">
+		        <span class="mui-icon mui-icon-home"></span>
+		        <span class="mui-tab-label">首页</span>
+		    </a>
+		    <a class="mui-tab-item" id="dict">
+		        <span class="mui-icon mui-icon-compose"></span>
+		        <span class="mui-tab-label">词典</span>
+		    </a>
+		    <a class="mui-tab-item" id="hot">
+		        <span class="mui-icon mui-icon-star"></span>
+		        <span class="mui-tab-label">热点</span>
+		    </a>
+		    <a class="mui-tab-item" id="mine">
+		        <span class="mui-icon mui-icon-gear"></span>
+		        <span class="mui-tab-label">我的</span>
+		    </a>
+		</nav>
+		<script type="text/javascript" charset="utf-8">
+			mui.init({
+				subpages: [
+					{
+						url: 'html/home.html',
+						id: 'home.html',
+						styles: {
+							top: '44px',
+							bottom: '44px',
+							width: '100%'
+						}
+					},
+					{
+						url: 'html/dict.html',
+						id: 'dict.html',
+						styles: {
+							top: '44px',
+							bottom: '44px',
+							width: '100%',
+							left: '100%'
+						}
+					},
+					{
+						url: 'html/hot.html',
+						id: 'hot.html',
+						styles: {
+							top: '44px',
+							bottom: '44px',
+							width: '100%',
+							left: '200%'
+						}
+					},
+					{
+						url: 'html/mine.html',
+						id: 'mine.html',
+						styles: {
+							top: '44px',
+							bottom: '44px',
+							width: '100%',
+							left: '300%'
+						}
+					}
+				]
+			});
+			
+			h('#home').tap(function() {
+				changeSub(1);
+			});
+			h('#dict').tap(function() {
+				changeSub(2);
+			});
+			h('#hot').tap(function() {
+				changeSub(3);
+			});
+			h('#mine').tap(function() {
+				changeSub(4);
+			});
+			
+			function changeSub(index) {
+				var home = plus.webview.getWebviewById('home.html');
+				var dict = plus.webview.getWebviewById('dict.html');
+				var hot = plus.webview.getWebviewById('hot.html');
+				var mine = plus.webview.getWebviewById('mine.html');
+				
+				home.setStyle({
+					left: (1-index)*100 + '%'
+				});
+				dict.setStyle({
+					left: (2-index)*100 + '%'
+				});
+				hot.setStyle({
+					left: (3-index)*100 + '%'
+				});
+				mine.setStyle({
+					left: (4-index)*100 + '%'
+				});
+			}
+		</script>
+	</body>
+
 </html>
