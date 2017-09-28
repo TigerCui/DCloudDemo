@@ -5,15 +5,34 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title></title>
-		<script src="js/mui.min.js"></script>
-		<script src="js/h.js"></script>
-		<link href="css/mui.css" rel="stylesheet" />
-		<link rel="stylesheet" type="text/css" href="css/yd.css"/>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/h.js"></script>
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/yd.css"/>
 	</head>
 
 	<body>
+		<header class="mui-bar mui-bar-nav hBg">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title" id="title"></h1>
+		</header>
+		<div class="mui-content" id="content"></div>
 		<script type="text/javascript" charset="utf-8">
 			mui.init();
+			
+			mui.plusReady(function() {
+				var _self = plus.webview.currentWebview();
+				mui.getJSON(
+					'http://hoa.hcoder.net/index.php?user=hcoder&pwd=hcoder&m=info&id=' + _self.newsId,
+					function(res) {
+						console.log(JSON.stringify(res));
+						h('#title').html(res.title);
+						h('#content').html(res.content);
+					}
+				);
+				
+			});
+			
 		</script>
 	</body>
 

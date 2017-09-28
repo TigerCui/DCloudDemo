@@ -55,7 +55,7 @@
 						var html = '';
 						for(var i = 0; i < newsList.length; i++) {
 							var newsItem = newsList[i].split('--hcListSplitor--');
-							html += '<li id="'+ i +'"><div class="imgs"><img src="' + newsItem[1] + '" /></div><div class="title">' + newsItem[2] + '</div></li>'
+							html += '<li id="'+ newsItem[0] +'"><div class="imgs"><img src="' + newsItem[1] + '" /></div><div class="title">' + newsItem[2] + '</div></li>'
 						}
 						h('#newsListUl').html(html);
 						console.log(JSON.stringify(res));
@@ -65,6 +65,9 @@
 				_index = plus.webview.getLaunchWebview();
 				_self = plus.webview.currentWebview();
 				_next = plus.webview.getWebviewById('dict.html');
+				//隐藏滚动条
+				_self.setStyle({scrollIndicator:'none'});
+				
 				//配置滑动操作
 				_self.drag({
 					direction: 'left', //滑动方向
@@ -82,15 +85,21 @@
 				
 				//给列表绑定点击事件
 				mui('#newsListUl').on('tap','li',function(e) {
-					var index = parseInt(this.getAttribute("id"));
-					console.log(''+index);
+					var id = this.getAttribute("id");
+					mui.openWindow({
+						url: 'newsDetail.html',
+						id: 'newsDetail.html',
+						styles: {
+							popGesture: 'close'
+						},
+						extras: {
+							newsId: id
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
 				});
-				
-				//点击列表项时的响应
-				function tapListItem(e) {
-					var index = parseInt(this.getAttribute("id"));
-					console.log(''+index);
-				}
 			});
 		</script>
 	</body>

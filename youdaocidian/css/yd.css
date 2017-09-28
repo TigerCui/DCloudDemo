@@ -12,6 +12,14 @@
 	background: #F03844;
 }
 
+.mui-title {
+	color: white;
+}
+
+.mui-icon-back:before, .mui-icon-left-nav:before {
+	color: #ffffff;
+}
+
 .hBg {
 	background-color: #f03844;
 }
@@ -77,4 +85,8 @@
 	overflow: hidden;
 	font-size: 14px;
 	line-height: 1.5em;
+}
+
+.newsContent {
+	
 }
