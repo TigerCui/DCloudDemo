@@ -58,7 +58,6 @@
 							html += '<li id="'+ newsItem[0] +'"><div class="imgs"><img src="' + newsItem[1] + '" /></div><div class="title">' + newsItem[2] + '</div></li>'
 						}
 						h('#newsListUl').html(html);
-						console.log(JSON.stringify(res));
 					}
 				);
 
@@ -86,19 +85,26 @@
 				//给列表绑定点击事件
 				mui('#newsListUl').on('tap','li',function(e) {
 					var id = this.getAttribute("id");
-					mui.openWindow({
-						url: 'newsDetail.html',
-						id: 'newsDetail.html',
-						styles: {
-							popGesture: 'close'
+					//创建webview
+					var test = plus.webview.create(
+						'newsDetail.html',
+						'newsDetail.html',
+						{
+							popGesture: 'close',
+							scrollIndicator: 'none',
+							titleNView: {
+								autoBackButton: true,
+								backgroundColor: '#f03844',
+								titleText: '',
+								titlecolor: '#ffffff'
+							}
 						},
-						extras: {
+						{
 							newsId: id
-						},
-						waiting: {
-							autoShow: false
 						}
-					});
+					);
+					//显示webview
+					plus.webview.show(test,"slide-in-right",300,function(){});
 				});
 			});
 		</script>

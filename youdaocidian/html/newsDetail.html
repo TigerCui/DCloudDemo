@@ -8,31 +8,97 @@
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/h.js"></script>
 		<link href="../css/mui.css" rel="stylesheet" />
-		<link rel="stylesheet" type="text/css" href="../css/yd.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/yd.css" />
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav hBg">
-		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-		    <h1 class="mui-title" id="title"></h1>
-		</header>
-		<div class="mui-content" id="content"></div>
+		<div class="mui-content" id="newsContent"></div>
+		<div id="newsFooter">
+			<div id="share">
+				<img src="../imgs/share.png" />
+			</div>
+		</div>
 		<script type="text/javascript" charset="utf-8">
-			mui.init();
-			
+			mui.init({});
+			var news;
 			mui.plusReady(function() {
 				var _self = plus.webview.currentWebview();
+				var _titleNView = _self.getTitleNView();
 				mui.getJSON(
 					'http://hoa.hcoder.net/index.php?user=hcoder&pwd=hcoder&m=info&id=' + _self.newsId,
 					function(res) {
-						console.log(JSON.stringify(res));
-						h('#title').html(res.title);
-						h('#content').html(res.content);
+						news = res;
+						_self.setStyle({
+							titleNView: {
+								titleText: res.title
+							}
+						});
+						h('#newsContent').html(res.content);
 					}
 				);
-				
+			});
+
+			h('#share').tap(function() {
+				//定义actionSheet其他按钮
+				var actionBtns = [{
+						title: "微信好友"
+					},
+					{
+						title: "朋友圈"
+					}
+				];
+				//定义actionSheet信息
+				var actionStyle = {
+					title: "请选择分享类型",
+					cancel: "取消",
+					buttons: actionBtns
+				};
+				//创建actionSheet
+				plus.nativeUI.actionSheet(actionStyle, function(e) {
+					if(e.index >= 1) {
+						shareNow(e.index);
+					}
+				});
 			});
 			
+			//分享方法
+			function shareNow(index) {
+				var shareWx;
+				plus.share.getServices(function(service) {
+					for(var k in service) {
+						if(service[k].id == "weixin") {
+							shareWx = service[k];
+						}
+					}
+					if(shareWx == null) {
+						mui.toast("获取分享服务失败");
+						return;
+					}
+					var msg = {
+						content: news.title,
+						href: "http://www.baidu.com"
+					};
+					if(index == 1) {
+						msg.extra = {
+							scene: "WXSceneSession"
+						};
+					} 
+					if (index == 2) {
+						msg.extra = {
+							scene: "WXSceneTimeline"
+						};
+					}
+
+					shareWx.send(msg, function() {
+						mui.toast("分享成功");
+					}, function(e) {
+						mui.toast(e.message);
+					})
+				}, function(e) {
+					console.log(JSON.stringify(e));
+					mui.toast(e.message);
+				})
+			}
 		</script>
 	</body>
 

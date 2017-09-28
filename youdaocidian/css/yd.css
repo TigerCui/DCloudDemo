@@ -71,7 +71,7 @@
 	width: 20%;
 	float: left;
 	overflow: hidden;
-	height: 50px;
+	height: 15vw;
 }
 
 .newsList .imgs img {
@@ -87,6 +87,34 @@
 	line-height: 1.5em;
 }
 
-.newsContent {
-	
+#newsContent {
+	padding: 8px;
+	overflow: hidden;
+	line-height: 1.8em;
+	padding-bottom: 52px;
+}
+
+#newsContent img {
+	width: 100%;
+}
+
+#newsFooter {
+	width: 100%;
+	height: 44px;
+	background: #F7F7F7;
+	position: fixed;
+	z-index: 1;
+	left: 0px;
+	bottom: 0px;
+}
+
+#share {
+	width: 34px;
+	height: 34px;
+	float: right;
+	margin: 5px 8px;
+}
+
+#share img {
+	width: 100%;
 }
