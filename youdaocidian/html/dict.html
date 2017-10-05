@@ -9,10 +9,39 @@
 		<script src="../js/h.js"></script>
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../css/yd.css" />
+		<style type="text/css">
+			.text-container {
+				width: 90%;
+				margin: 0 auto;
+				padding-top: 38px;
+			}
+			
+			.text-container textarea {
+				width: 100%;
+				height: 128px;
+			}
+			
+			.btn-container {
+				width: 90%;
+				margin: 0 auto;
+			}
+			
+			.btn-container button {
+				width: 100%;
+			}
+		</style>
 	</head>
 
 	<body>
-		dict
+		<div class="mui-content">
+		    <div class="text-container">
+		    		<textarea id="keywords" placeholder="请输入要翻译的文本"></textarea>
+		    </div>
+		    <div class="btn-container">
+		    		<button id="submitBtn" type="button" class="mui-btn">开始翻译</button>
+		    </div>
+		</div>
+		<script src="../js/md5.js"></script>
 		<script type="text/javascript" charset="utf-8">
 			mui.init();
 			var _index, _self, _next, _prve; //定义四个变量 index页 当前页 下一页 前一页
@@ -50,6 +79,34 @@
 						_index.evalJS("h('#tabBar').find('a').removeClass('mui.active');h('#home').addClass('mui-active');");
 					}
 				});
+			});
+			
+			var address = "http://openapi.youdao.com/api";
+			var q = "";
+			var fromType = "auto";
+			var toType = "auto";
+			var appKey = "2e75090feca78092";
+			var salt = "123";
+			var pw = "Zlrs9DMXHDNWx0qesVEvCoBuMJRT7LB3";
+			var sign = "";
+			//翻译按钮点击事件
+//			document.getElementById("#submitBtn").addEventlistener("tap",function() {
+//				console.log("点击按钮");
+//			});
+			h('#submitBtn').tap(function() {
+				var keywords = h('#keywords').val();
+				q = keywords;
+				if(keywords.length < 1) {
+					mui.toast('请输入要翻译的文本');
+					return false;
+				}
+				sign = hex_md5(appKey + q + salt + pw);
+				mui.getJSON(
+					address + "?q=" + q + "&from=" + fromType + "&to=" + toType + "&appKey=" + appKey + "&salt=" + salt + "&sign=" + sign,
+					function(res) {
+						console.log(JSON.stringify(res));
+					}
+				);
 			});
 		</script>
 	</body>
