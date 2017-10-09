@@ -29,19 +29,37 @@
 			.btn-container button {
 				width: 100%;
 			}
+			
+			.translation-container {
+				width: 90%;
+				margin: 0 auto;
+				margin-top: 18px;
+				display: none;
+			}
+			
+			.translation-container p {
+				line-height: 1.8em;
+				font-size: 15px;
+				padding: 10px;
+				background: white;
+				
+			}
 		</style>
 	</head>
 
 	<body>
 		<div class="mui-content">
-		    <div class="text-container">
-		    		<textarea id="keywords" placeholder="请输入要翻译的文本"></textarea>
-		    </div>
-		    <div class="btn-container">
-		    		<button id="submitBtn" type="button" class="mui-btn">开始翻译</button>
-		    </div>
+			<div class="text-container">
+				<textarea id="keywords" placeholder="请输入要翻译的文本"></textarea>
+			</div>
+			<div class="btn-container">
+				<button id="submitBtn" type="button" class="mui-btn">开始翻译</button>
+			</div>
+			<div class="translation-container" id="translation">
+				<p></p>
+			</div>
 		</div>
-		<script src="../js/md5.js"></script>
+		<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
 		<script type="text/javascript" charset="utf-8">
 			mui.init();
 			var _index, _self, _next, _prve; //定义四个变量 index页 当前页 下一页 前一页
@@ -80,19 +98,19 @@
 					}
 				});
 			});
-			
+
 			var address = "http://openapi.youdao.com/api";
 			var q = "";
-			var fromType = "auto";
-			var toType = "auto";
+			var fromType = "zh-CHS";
+			var toType = "EN";
 			var appKey = "2e75090feca78092";
 			var salt = "123";
 			var pw = "Zlrs9DMXHDNWx0qesVEvCoBuMJRT7LB3";
 			var sign = "";
 			//翻译按钮点击事件
-//			document.getElementById("#submitBtn").addEventlistener("tap",function() {
-//				console.log("点击按钮");
-//			});
+			//			document.getElementById("#submitBtn").addEventlistener("tap",function() {
+			//				console.log("点击按钮");
+			//			});
 			h('#submitBtn').tap(function() {
 				var keywords = h('#keywords').val();
 				q = keywords;
@@ -100,14 +118,23 @@
 					mui.toast('请输入要翻译的文本');
 					return false;
 				}
-				sign = hex_md5(appKey + q + salt + pw);
+				sign = md5(appKey + q + salt + pw)
+				var requestUrl = address + "?q=" + q + "&from=" + fromType + "&to=" + toType + "&appKey=" + appKey + "&salt=" + salt + "&sign=" + sign;
 				mui.getJSON(
-					address + "?q=" + q + "&from=" + fromType + "&to=" + toType + "&appKey=" + appKey + "&salt=" + salt + "&sign=" + sign,
+					requestUrl,
 					function(res) {
 						console.log(JSON.stringify(res));
+						h("#translation").find('p').html(res.translation);
+						h("#translation").show();
 					}
 				);
 			});
+
+			function changeToUtf8(pValue) {
+				return pValue.replace(/[^\u0000-\u00FF]/g, function($0) {
+					return escape($0).replace(/(%u)(\w{4})/gi, "&#x$2;")
+				});
+			}
 		</script>
 	</body>
 

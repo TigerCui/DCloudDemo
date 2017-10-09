@@ -115,6 +115,13 @@
 					left: (4-index)*100 + '%'
 				});
 			}
+			
+			//搜索栏的点击事件
+			h("#searchBtn").tap(function() {
+				changeSub(2);
+				h('#tabBar').find('a').removeClass('mui.active');
+				h('#dict').addClass('mui-active');
+			});
 		</script>
 	</body>
 
