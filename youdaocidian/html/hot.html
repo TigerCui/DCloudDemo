@@ -12,9 +12,75 @@
 	</head>
 
 	<body>
-		hot
+		<div class="mui-content mui-scroll-wrapper" id="refreshContainer">
+			<div class="mui-scroll newsList">
+				<ul class="newsList" id="newsListUl">
+				</ul>
+			</div>
+		</div>
 		<script type="text/javascript" charset="utf-8">
-			mui.init();
+			mui.init({
+				pullRefresh: {
+					container: "#refreshContainer",
+					down: {
+						height: 50,
+						auto: true,
+						contentdown: "下拉可以刷新",
+						contentover: "释放立即刷新",
+						contentrefresh: "正在刷新...",
+						callback: getNewsList
+					},
+					up: {
+						height: 50,
+						auto: false,
+						contentrefresh: "正在加载...",
+						contentnomore: "没有更多数据了",
+						callback: getListByPage
+					}
+				}
+			});
+			var page = 1;
+
+			function getListByPage() {
+				var _self = this;
+				mui.get(
+					'http://hoa.hcoder.net/index.php?user=hcoder&pwd=hcoder&m=mediaList&page=' + page,
+					function(res) {
+						if(res == 'null') {
+							_self.endPullupToRefresh(true);
+							return false;
+						}
+						var newsList = res.split('--hcSplitor--');
+						var li = document.createElement('li');
+						for(var i = 0; i < newsList.length; i++) {
+							var newsItem = newsList[i].split('--hcListSplitor--');
+							li.innerHTML = "233";//'<div class="imgs"><img src="' + newsItem[1] + '" /></div><div class="title">' + newsItem[2] + '</div>';
+
+							h(li).appendTo("newsListUl");
+						}
+						page++;
+						_self.endPullupToRefresh(false);
+					}
+				);
+			}
+
+			function getNewsList() {
+				page = 1;
+				mui.get(
+					'http://hoa.hcoder.net/index.php?user=hcoder&pwd=hcoder&m=mediaList&page=' + page,
+					function(res) {
+						var newsList = res.split('--hcSplitor--');
+						var html = '';
+						for(var i = 0; i < newsList.length; i++) {
+							var newsItem = newsList[i].split('--hcListSplitor--');
+							html += '<li id="' + newsItem[0] + '"><div class="imgs"><img src="' + newsItem[1] + '" /></div><div class="title">' + newsItem[2] + '</div></li>'
+						}
+						h('#newsListUl').html(html);
+						mui("#refreshContainer").pullRefresh().endPulldownToRefresh();
+						page++;
+					}
+				);
+			}
 			var _index, _self, _next, _prve; //定义四个变量 index页 当前页 下一页 前一页
 			mui.plusReady(function() {
 				_index = plus.webview.getLaunchWebview();
@@ -31,7 +97,7 @@
 				}, function(e) {
 					//滑动过程中的回调韩式
 					if(e.type == 'end' && e.result) {
-					//修改tabBar按钮的选中效果,现将tabBar上所有a标签的mui.active类去掉,然后再在dict的a标签上添加mui-active
+						//修改tabBar按钮的选中效果,现将tabBar上所有a标签的mui.active类去掉,然后再在dict的a标签上添加mui-active
 						_index.evalJS("h('#tabBar').find('a').removeClass('mui.active');h('#mine').addClass('mui-active');");
 					}
 				});
@@ -47,7 +113,7 @@
 					if(e.type == 'end' && e.result) {
 						//修改tabBar按钮的选中效果,现将tabBar上所有a标签的mui.active类去掉,然后再在dict的a标签上添加mui-active
 						_index.evalJS("h('#tabBar').find('a').removeClass('mui.active');h('#dict').addClass('mui-active');");
-					}	
+					}
 				});
 			});
 		</script>
