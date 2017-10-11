@@ -14,7 +14,7 @@
 	<body>
 		<div class="mui-content mui-scroll-wrapper" id="refreshContainer">
 			<div class="mui-scroll newsList">
-				<ul class="newsList" id="newsListUl">
+				<ul id="newsListUl">
 				</ul>
 			</div>
 		</div>
@@ -50,19 +50,40 @@
 							_self.endPullupToRefresh(true);
 							return false;
 						}
-						var newsList = res.split('--hcSplitor--');
-						var li = document.createElement('li');
-						for(var i = 0; i < newsList.length; i++) {
-							var newsItem = newsList[i].split('--hcListSplitor--');
-							li.innerHTML = "233";//'<div class="imgs"><img src="' + newsItem[1] + '" /></div><div class="title">' + newsItem[2] + '</div>';
-
-							h(li).appendTo("newsListUl");
+						var newsLists = res.split('--hcSplitor--');
+						for(var i = 0; i < newsLists.length; i++) {
+							var li = document.createElement('li');
+							var newsItem = newsLists[i].split('--hcListSplitor--');
+							li.innerHTML = '<div class="imgs"><img src="' + newsItem[1] + '" /></div><div class="title">' + newsItem[2] + '</div>';
+							h(li).appendTo('#newsListUl');
 						}
 						page++;
 						_self.endPullupToRefresh(false);
 					}
 				);
 			}
+
+//			function getListByPage() {
+//				var _self = this;
+//				mui.get(
+//					'http://hoa.hcoder.net/index.php?user=hcoder&pwd=hcoder&m=mediaList&page=' + page,
+//					function(res) {
+//						if(res == 'null') {
+//							_self.endPullupToRefresh(true);
+//							return false;
+//						}
+//						var newsList = res.split('--hcSplitor--');
+//						for(var i = 0; i < newsList.length; i++) {
+//							var li = document.createElement('li');
+//							var newsItem = newsList[i].split('--hcListSplitor--');
+//							li.innerHTML = '<div class="imgs"><img src="' + newsItem[1] + '" /></div><div class="title">' + newsItem[2] + '</div>';
+//							h(li).appendTo('newsListUl');
+//						}
+//						page++;
+//						_self.endPullupToRefresh(false);
+//					}
+//				);
+//			}
 
 			function getNewsList() {
 				page = 1;
@@ -78,6 +99,7 @@
 						h('#newsListUl').html(html);
 						mui("#refreshContainer").pullRefresh().endPulldownToRefresh();
 						page++;
+						mui('#refreshContainer').pullRefresh().refresh(true);
 					}
 				);
 			}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<link href="css/mui.css" rel="stylesheet"/>
+</head>
+<body>
+<header class="mui-bar mui-bar-nav hBg">
+    <div id="logo">
+    	<img src="imgs/logo.png" />
+    </div>
+    <div id="searchBut">请输入要翻译的文本</div>
+</header>
+<nav class="mui-bar mui-bar-tab" id="navFooter">
+    <a class="mui-tab-item mui-active" id="nav1">
+        <span class="mui-icon mui-icon-home"></span>
+        <span class="mui-tab-label">首页</span>
+    </a>
+    <a class="mui-tab-item" id="nav2">
+        <span class="mui-icon mui-icon-compose"></span>
+        <span class="mui-tab-label">词典</span>
+    </a>
+    <a class="mui-tab-item" id="nav3">
+        <span class="mui-icon mui-icon-star"></span>
+        <span class="mui-tab-label">热点</span>
+    </a>
+    <a class="mui-tab-item" id="nav4">
+        <span class="mui-icon mui-icon-gear"></span>
+        <span class="mui-tab-label">我的</span>
+    </a>
+</nav>
+<script src="js/mui.min.js"></script>
+<script type="text/javascript" src="js/h.js"></script>
+<script type="text/javascript" charset="utf-8">
+mui.init({
+	subpages : [
+		{
+			url : 'sub1.html',
+	        id  : 'sub1.html',
+	        styles : {top :'44px', bottom:'44px', width:"100%"}
+		},
+  		{
+			url : 'sub2.html',
+        	id  : 'sub2.html',
+        	styles : {top :'44px', bottom:'44px', width:"100%", left:"100%"}
+		},
+  		{
+			url : 'sub3.html',
+        	id  : 'sub3.html',
+        	styles : {top :'44px', bottom:'44px', width:"100%", left:"200%"}
+		},
+  		{
+			url : 'sub4.html',
+        	id  : 'sub4.html',
+        	styles : {top :'44px', bottom:'44px', width:"100%", left:"300%"}
+		}
+	]
+});
+
+h('#nav1').tap(function(){changSub(1);});
+h('#nav2').tap(function(){changSub(2);});
+h('#nav3').tap(function(){changSub(3);});
+h('#nav4').tap(function(){
+	//判断登录
+	var uid = plus.storage.getItem('suid');
+	if(uid == null){
+		wxLogin('changSub(4);');
+		return false;
+	}
+	changSub(4);
+});
+h('#searchBut').tap(function(){
+	changSub(2);
+	h("#navFooter").find("a").removeClass("mui-active");
+	h("#nav2").addClass("mui-active");
+});
+
+function changSub(index){
+	var sub1 = plus.webview.getWebviewById('sub1.html');
+    var sub2 = plus.webview.getWebviewById('sub2.html');
+    var sub3 = plus.webview.getWebviewById('sub3.html');
+    var sub4 = plus.webview.getWebviewById('sub4.html');
+    sub1.setStyle({left: (1 - index) * 100 + '%'});
+    sub2.setStyle({left: (2 - index) * 100 + "%"});
+    sub3.setStyle({left: (3 - index) * 100 + "%"});
+    sub4.setStyle({left: (4 - index) * 100 + "%"});
+}
+
+mui.plusReady(function(){
+	mui.getJSON(
+		'http://hoa.hcoder.net/index.php?m=sendMsg',
+		function(res){
+			//读取本地消息id进行比对
+			var localMsgId = plus.storage.getItem('localMsgId');
+			if(localMsgId == null){
+				plus.push.createMessage(res.msg, "LocalMSG", {cover:false});
+				plus.storage.setItem('localMsgId', res.msgId+'');
+			}else{
+				if(localMsgId != res.msgId){
+					plus.push.createMessage(res.msg, "LocalMSG", {cover:false});
+					plus.storage.setItem('localMsgId', res.msgId+'');
+				}
+			}
+		}
+	);
+	//检查版本
+	var verson = '1.2';
+	mui.getJSON(
+		'http://hoa.hcoder.net/index.php?m=ver',
+		function(res){
+			if(verson != res.v){
+				mui.toast('正在更新版本');
+				var dtask = plus.downloader.createDownload(
+					res.src,
+					{method:"GET"},
+					function(d, status){
+						if(status == 200){
+							mui.toast('新版本下载成功，开始安装');
+							plus.runtime.install(d.filename);
+						}
+					}
+				);
+				dtask.start();
+			}
+		}
+	);
+});
+</script>
+</body>
+</html>
